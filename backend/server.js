@@ -467,10 +467,11 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.resolve(frontendPath, 'index.html'));
     });
 
-    app.use('/', (req, res) => {
-        res.send("hello world")
-    })
+    
 }
+app.use('/', (req, res) => {
+    res.send("hello world")
+})
 
 // ============================
 // 🖥 Start Server
