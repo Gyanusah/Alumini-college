@@ -55,15 +55,15 @@ function Footer() {
           <div>
             <h3 className="text-lg font-bold mb-4">Follow Us</h3>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-white transition">
+              <Link to="#" className="text-gray-400 hover:text-white transition">
                 Facebook
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition">
+              </Link>
+              <Link to="#" className="text-gray-400 hover:text-white transition">
                 Twitter
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition">
+              </Link>
+              <Link to="#" className="text-gray-400 hover:text-white transition">
                 LinkedIn
-              </a>
+              </Link>
             </div>
           </div>
         </div>
