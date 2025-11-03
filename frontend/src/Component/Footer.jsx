@@ -19,24 +19,24 @@ function Footer() {
             <h3 className="text-lg font-bold mb-4">Quick Links</h3>
             <ul className="space-y-2 text-gray-400">
               <li>
-                <a href="/" className="hover:text-white transition">
+                <Link to ="/" className="hover:text-white transition">
                   Home
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/alumni" className="hover:text-white transition">
+                <Link to="/alumni" className="hover:text-white transition">
                   Alumni
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/jobs" className="hover:text-white transition">
+                <Link to="/jobs" className="hover:text-white transition">
                   Jobs
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/events" className="hover:text-white transition">
+                <Link to="/events" className="hover:text-white transition">
                   Events
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
