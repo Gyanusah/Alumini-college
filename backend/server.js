@@ -45,6 +45,13 @@ app.use('/api/events', eventRoutes);
 app.use('/api/connections', connectionRoutes);
 app.use('/api/alumni', alumniRoutes);
 
+
+
+// Root route for testing
+app.get('/', (req, res) => {
+    res.send("Hello World from Alumni Backend 🚀");
+});
+
 // ============================
 // 🚫 404 Route Not Found Handler
 // ============================
@@ -98,10 +105,8 @@ app.use((err, req, res, next) => {
 
 
     
-//}
-app.use('/', (req, res) => {
-    res.send("hello world")
-})
+
+
 
 // ============================
 // 🖥 Start Server
