@@ -349,7 +349,7 @@ function Home({ user }) {
       </section>
 
       {/* Features Section */}
-      <section className="bg-gradient-to-b from-white to-gray-50 py-20">
+      <section className="bg-linear-to-b from-white to-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-16 tracking-tight">
             ✨ Our Features
@@ -396,7 +396,7 @@ function Home({ user }) {
       </section>
 
       {/* Stats Section */}
-      <section className="bg-gradient-to-br from-yellow-50 via-white to-gray-100 py-20">
+      <section className="bg-linear-to-br from-yellow-50 via-white to-gray-100 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-16 tracking-tight">
             📊 Alumni Portal Highlights

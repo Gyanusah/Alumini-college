@@ -26,7 +26,7 @@ import { protect } from '../middleware/auth.js';
 const router = express.Router();
 
 // 🟢 Public routes
-router.get('/alumni', getAllAlumni);
+router.get('/', getAllAlumni);
 router.get('/search', searchAlumni);
 router.get('/stats/overview', getAlumniStats);
 router.get('/branch/:branch', getAlumniByBranch);
@@ -43,7 +43,7 @@ router.get('/stats', protect, getConnectionStats);
 router.get('/mentorship', protect, getMentorshipConnectionsController);
 
 // 🔗 Connection management
-router.post('/alumni:id/connect', protect, sendConnectionRequest);
+router.post('/:id/connect', protect, sendConnectionRequest);
 router.put('/connections/:id/accept', protect, acceptConnection);
 router.put('/connections/:id/reject', protect, rejectConnection);
 router.put('/connections/:id/mentorship', protect, updateMentorshipDetails);

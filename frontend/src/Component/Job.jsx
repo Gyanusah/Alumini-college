@@ -179,7 +179,7 @@ function Jobs() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1  lg:grid-cols-3 gap-8">
         {/* Jobs List */}
         <div className="lg:col-span-2">
           {loading ? (
@@ -188,12 +188,12 @@ function Jobs() {
             </div>
           ) : jobs.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-xl text-gray-600">
+              <p className="text-xl text-gray-400">
                 No jobs found matching your filters
               </p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-4 bg-gray-200 p-3 rounded-2xl shadow-2xl ">
               {jobs.map((job) => (
                 <div
                   key={job._id}
@@ -220,7 +220,7 @@ function Jobs() {
         </div>
 
         {/* Job Details */}
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 p-3 rounded-2xl shadow-2xl bg-gray-100">
           {selectedJob ? (
             <div className="card sticky top-4">
               <h2 className="text-2xl font-bold mb-4">{selectedJob.title}</h2>

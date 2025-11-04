@@ -137,7 +137,7 @@ function Events() {
             name="eventType"
             value={filters.eventType}
             onChange={handleFilterChange}
-            className="input-field"
+            className="input-field bg-gray-300 p-3 rounded-2xl "
           >
             <option value="">All Event Types</option>
             <option value="workshop">Workshop</option>
@@ -150,7 +150,7 @@ function Events() {
             name="isVirtual"
             value={filters.isVirtual}
             onChange={handleFilterChange}
-            className="input-field"
+            className="input-field p-3 rounded-2xl bg-gray-300  "
           >
             <option value="">All Formats</option>
             <option value="true">Virtual</option>
