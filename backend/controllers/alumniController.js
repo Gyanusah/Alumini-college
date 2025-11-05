@@ -17,10 +17,10 @@ import {
     updateMentorshipDetails as updateMentorshipDetailsService
 } from '../services/alumniConnectionService.js';
 
-// 📘 Get all verified alumni
+// Get all alumni
 export const getAllAlumni = asyncHandler(async (req, res, next) => {
     const { branch, company, skills, graduationYear } = req.query;
-    const query = { role: 'alumni', isVerified: true };
+    const query = { role: 'alumni' };
 
     if (branch) query.branch = branch;
     if (company) query.currentCompany = { $regex: company, $options: 'i' };
@@ -38,7 +38,7 @@ export const getAllAlumni = asyncHandler(async (req, res, next) => {
     });
 });
 
-// 📘 Get alumni by branch
+// Get alumni by branch
 export const getAlumniByBranch = asyncHandler(async (req, res) => {
     const { branch } = req.params;
     const alumni = await User.find({

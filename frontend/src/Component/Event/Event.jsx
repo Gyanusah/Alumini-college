@@ -43,10 +43,12 @@ function Events() {
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      let url = "http://localhost:5000/api/events";
+      const baseUrl = "http://localhost:5000/api/events";
+      const params = new URLSearchParams();
+      if (filters.eventType) params.set("eventType", filters.eventType);
+      if (filters.isVirtual) params.set("isVirtual", filters.isVirtual);
 
-      if (filters.eventType) url += `&eventType=${filters.eventType}`;
-      if (filters.isVirtual) url += `&isVirtual=${filters.isVirtual}`;
+      const url = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
 
       const response = await fetch(url);
       const data = await response.json();

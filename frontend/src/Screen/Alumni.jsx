@@ -53,11 +53,13 @@ function Alumni({ user }) {
   const fetchAlumni = async () => {
     try {
       setLoading(true);
-      let url = "http://localhost:5000/api/users?role=alumni";
+      const baseUrl = "http://localhost:5000/api/alumni";
+      const params = new URLSearchParams();
+      if (filters.branch) params.set("branch", filters.branch);
+      if (filters.company) params.set("company", filters.company);
+      if (filters.skills) params.set("skills", filters.skills);
 
-      if (filters.branch) url += `&branch=${filters.branch}`;
-      if (filters.company) url += `&company=${filters.company}`;
-      if (filters.skills) url += `&skills=${filters.skills}`;
+      const url = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
 
       const response = await fetch(url);
       const data = await response.json();

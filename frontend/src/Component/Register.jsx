@@ -53,7 +53,7 @@ function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 to-indigo-500 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-r from-purple-500 to-indigo-500 p-4">
       <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
         <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">
           Register

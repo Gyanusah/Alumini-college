@@ -69,6 +69,7 @@ function Login({ setUser }) {
           // Fetch user data
           const userResponse = await fetch(
             "http://localhost:5000/api/auth/me",
+                  // "http://your-frontend.vercel.app",
             {
               headers: {
                 Authorization: `Bearer ${data.token}`,
@@ -121,7 +122,7 @@ function Login({ setUser }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 to-indigo-500 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-r from-purple-500 to-indigo-500 p-4">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
 

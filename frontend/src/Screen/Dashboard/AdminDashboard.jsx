@@ -22,7 +22,7 @@ function AdminDashboard({ user }) {
       const token = localStorage.getItem("token");
 
       // Fetch all users
-      const userResponse = await fetch("http://localhost:5000/api/users");
+      const userResponse = await fetch("http://localhost:5000/api/users/user");
       const userData = await userResponse.json();
       if (userData.success) {
         setUsers(userData.data);
