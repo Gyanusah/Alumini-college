@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { API_ENDPOINTS } from "../config/api";
 
 function Alumni({ user }) {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ function Alumni({ user }) {
       const token = localStorage.getItem("token");
       if (!token) return;
 
-      const response = await fetch("http://localhost:5000/api/auth/me", {
+      const response = await fetch(API_ENDPOINTS.GET_ME, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
@@ -32,7 +33,7 @@ function Alumni({ user }) {
         setCurrentUser(data.data);
         // Fetch sent connection requests
         const connResponse = await fetch(
-          "http://localhost:5000/api/connections",
+          API_ENDPOINTS.CONNECTIONS,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -53,7 +54,7 @@ function Alumni({ user }) {
   const fetchAlumni = async () => {
     try {
       setLoading(true);
-      const baseUrl = "http://localhost:5000/api/alumni";
+      const baseUrl = API_ENDPOINTS.ALUMNI;
       const params = new URLSearchParams();
       if (filters.branch) params.set("branch", filters.branch);
       if (filters.company) params.set("company", filters.company);
@@ -97,7 +98,7 @@ function Alumni({ user }) {
     setRequestingConnection(alumniId);
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:5000/api/connections", {
+      const response = await fetch(API_ENDPOINTS.CONNECTIONS, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -126,155 +127,210 @@ function Alumni({ user }) {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Header Section */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">Our Alumni Network</h1>
-        {currentUser && currentUser.role === "student" ? (
-          <p className="text-lg text-gray-600">
-            🤝 Connect with experienced alumni and expand your professional
-            network
-          </p>
-        ) : currentUser && currentUser.role === "alumni" ? (
-          <p className="text-lg text-gray-600">
-            👥 Browse and connect with fellow alumni from our community
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Header Section */}
+        <div className="mb-10">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3">
+            Our Alumni Network
+          </h1>
+          {currentUser && currentUser.role === "student" ? (
+            <p className="text-lg text-gray-600 flex items-center gap-2">
+              <span className="text-2xl">🤝</span>
+              Connect with experienced alumni and expand your professional network
+            </p>
+          ) : currentUser && currentUser.role === "alumni" ? (
+            <p className="text-lg text-gray-600 flex items-center gap-2">
+              <span className="text-2xl">👥</span>
+              Browse and connect with fellow alumni from our community
+            </p>
+          ) : (
+            <p className="text-lg text-gray-600 flex items-center gap-2">
+              <span className="text-2xl">✨</span>
+              Discover our vibrant alumni community and their professional achievements
+            </p>
+          )}
+        </div>
+
+        {/* Filters */}
+        <div className="bg-white rounded-2xl shadow-xl p-8 mb-10 border border-gray-100">
+          <div className="flex items-center gap-3 mb-6">
+            <span className="text-3xl">🔍</span>
+            <h2 className="text-2xl font-bold text-gray-800">Find Alumni</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="relative">
+              <span className="absolute left-4 top-3 text-gray-400">🎓</span>
+              <input
+                type="text"
+                name="branch"
+                placeholder="Filter by branch (e.g., CSE, ECE)"
+                value={filters.branch}
+                onChange={handleFilterChange}
+                className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+              />
+            </div>
+            <div className="relative">
+              <span className="absolute left-4 top-3 text-gray-400">🏢</span>
+              <input
+                type="text"
+                name="company"
+                placeholder="Filter by company (e.g., Google)"
+                value={filters.company}
+                onChange={handleFilterChange}
+                className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+              />
+            </div>
+            <div className="relative">
+              <span className="absolute left-4 top-3 text-gray-400">💻</span>
+              <input
+                type="text"
+                name="skills"
+                placeholder="Filter by skills (e.g., React, Python)"
+                value={filters.skills}
+                onChange={handleFilterChange}
+                className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+              />
+            </div>
+          </div>
+          {(filters.branch || filters.company || filters.skills) && (
+            <div className="mt-4 flex items-center gap-2">
+              <span className="text-sm text-gray-600">Active filters:</span>
+              <button
+                onClick={() => setFilters({ branch: "", company: "", skills: "" })}
+                className="text-sm text-blue-600 hover:text-blue-800 font-semibold"
+              >
+                Clear all filters
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Alumni Grid */}
+        {loading ? (
+          <div className="text-center py-20">
+            <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mb-4"></div>
+            <p className="text-xl text-gray-600 font-semibold">Loading amazing alumni...</p>
+          </div>
+        ) : alumni.length === 0 ? (
+          <div className="text-center py-20 bg-white rounded-2xl shadow-lg">
+            <span className="text-6xl mb-4 block">🔍</span>
+            <p className="text-2xl font-bold text-gray-800 mb-2">No Alumni Found</p>
+            <p className="text-gray-600">
+              Try adjusting your filters to see more results
+            </p>
+          </div>
         ) : (
-          <p className="text-lg text-gray-600">
-            Discover our vibrant alumni community and their professional
-            achievements
-          </p>
-        )}
-      </div>
-
-      {/* Filters */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h2 className="text-xl font-bold mb-4">Filter Alumni</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <input
-            type="text"
-            name="branch"
-            placeholder="Filter by branch"
-            value={filters.branch}
-            onChange={handleFilterChange}
-            className="border rounded-md px-4 py-2 transition duration-300 ease-in-out focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
-          <input
-            type="text"
-            name="company"
-            placeholder="Filter by company"
-            value={filters.company}
-            onChange={handleFilterChange}
-            className="input-field border rounded-md px-4 py-2 transition duration-300 ease-in-out focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
-          <input
-            type="text"
-            name="skills"
-            placeholder="Filter by skills"
-            value={filters.skills}
-            onChange={handleFilterChange}
-            className="border rounded-md px-4 py-2 transition duration-300 ease-in-out focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
-        </div>
-      </div>
-
-      {/* Alumni Grid */}
-      {loading ? (
-        <div className="text-center py-12">
-          <p className="text-xl text-gray-600">Loading alumni...</p>
-        </div>
-      ) : alumni.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-xl text-gray-600">
-            No alumni found matching your filters
-          </p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {alumni.map((person) => (
-            <div key={person._id} className="card hover:shadow-lg transition">
-              <Link to={`/profile/${person._id}`} className="cursor-pointer">
-                <div className="flex items-center mb-4">
-                  <div className="w-16 h-16 bg-linear-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-2xl">
-                    👤
-                  </div>
-                  <div className="ml-4">
-                    <h3 className="text-lg font-bold">{person.name}</h3>
-                    <p className="text-gray-600 text-sm">{person.branch}</p>
-                  </div>
-                </div>
-
-                <div className="space-y-2 text-sm">
-                  {person.currentCompany && (
-                    <p>
-                      <strong>💼 Company:</strong> {person.currentCompany}
-                    </p>
-                  )}
-                  {person.designation && (
-                    <p>
-                      <strong>🎯 Designation:</strong> {person.designation}
-                    </p>
-                  )}
-                  <p>
-                    <strong>📅 Graduation:</strong> {person.graduationYear}
-                  </p>
-                </div>
-
-                {person.skills && person.skills.length > 0 && (
-                  <div className="mt-4">
-                    <p className="font-semibold mb-2">Skills:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {person.skills.slice(0, 3).map((skill, idx) => (
-                        <span
-                          key={idx}
-                          className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-semibold"
-                        >
-                          {skill}
+          <>
+            <div className="mb-6 flex items-center justify-between">
+              <p className="text-gray-600">
+                <span className="font-bold text-2xl text-blue-600">{alumni.length}</span> alumni found
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {alumni.map((person) => (
+                <div 
+                  key={person._id} 
+                  className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 group"
+                >
+                  <Link to={`/profile/${person._id}`} className="block">
+                    {/* Card Header with Gradient */}
+                    <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 relative">
+                      <div className="absolute top-4 right-4">
+                        <span className="bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold">
+                          Class of {person.graduationYear}
                         </span>
-                      ))}
-                      {person.skills && person.skills.length > 3 && (
-                        <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs">
-                          +{person.skills.length - 3} more
-                        </span>
+                      </div>
+                      <div className="flex items-center gap-4 mt-8">
+                        <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-4xl shadow-lg">
+                          👤
+                        </div>
+                        <div className="text-white">
+                          <h3 className="text-xl font-bold">{person.name}</h3>
+                          <p className="text-blue-100 text-sm flex items-center gap-1">
+                            <span>🎓</span> {person.branch}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Card Body */}
+                    <div className="p-6">
+                      <div className="space-y-3 mb-4">
+                        {person.currentCompany && (
+                          <div className="flex items-center gap-2 text-sm">
+                            <span className="text-lg">🏢</span>
+                            <span className="text-gray-600">at</span>
+                            <span className="font-semibold text-gray-800">{person.currentCompany}</span>
+                          </div>
+                        )}
+                        {person.designation && (
+                          <div className="flex items-center gap-2 text-sm">
+                            <span className="text-lg">💼</span>
+                            <span className="font-semibold text-gray-800">{person.designation}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {person.skills && person.skills.length > 0 && (
+                        <div className="mt-4">
+                          <p className="text-xs font-semibold text-gray-500 mb-2 uppercase">Top Skills</p>
+                          <div className="flex flex-wrap gap-2">
+                            {person.skills.slice(0, 4).map((skill, idx) => (
+                              <span
+                                key={idx}
+                                className="bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold border border-blue-200"
+                              >
+                                {skill}
+                              </span>
+                            ))}
+                            {person.skills.length > 4 && (
+                              <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-semibold">
+                                +{person.skills.length - 4}
+                              </span>
+                            )}
+                          </div>
+                        </div>
                       )}
                     </div>
-                  </div>
-                )}
-              </Link>
+                  </Link>
 
-              <div className="flex gap-2 mt-4">
-                <Link to={`/profile/${person._id}`} className="flex-1">
-                  <button className="w-full btn-primary text-sm">
-                    👁️ View Profile
-                  </button>
-                </Link>
-                {currentUser && currentUser.role === "student" && (
-                  <button
-                    onClick={() => handleSendConnectionRequest(person._id)}
-                    disabled={
-                      requestingConnection === person._id ||
-                      sentRequests.includes(person._id)
-                    }
-                    className={`flex-1 text-sm font-semibold py-2 px-3 rounded transition ${
-                      sentRequests.includes(person._id)
-                        ? "bg-green-500 text-white cursor-not-allowed"
-                        : requestingConnection === person._id
-                        ? "bg-gray-400 text-white cursor-not-allowed"
-                        : "bg-purple-500 hover:bg-purple-600 text-white"
-                    }`}
-                  >
-                    {sentRequests.includes(person._id)
-                      ? "✓ Connected"
-                      : requestingConnection === person._id
-                      ? "⏳"
-                      : "🤝 Connect"}
-                  </button>
-                )}
-              </div>
+                  {/* Card Footer */}
+                  <div className="px-6 pb-6 flex gap-3">
+                    <Link to={`/profile/${person._id}`} className="flex-1">
+                      <button className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg">
+                        👁️ View Profile
+                      </button>
+                    </Link>
+                    {currentUser && currentUser.role === "student" && (
+                      <button
+                        onClick={() => handleSendConnectionRequest(person._id)}
+                        disabled={
+                          requestingConnection === person._id ||
+                          sentRequests.includes(person._id)
+                        }
+                        className={`flex-1 font-semibold py-3 rounded-xl transition-all duration-300 shadow-md ${
+                          sentRequests.includes(person._id)
+                            ? "bg-gradient-to-r from-green-500 to-green-600 text-white cursor-not-allowed"
+                            : requestingConnection === person._id
+                            ? "bg-gray-400 text-white cursor-not-allowed"
+                            : "bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white hover:shadow-lg"
+                        }`}
+                      >
+                        {sentRequests.includes(person._id)
+                          ? "✓ Connected"
+                          : requestingConnection === person._id
+                          ? "⏳ Sending..."
+                          : "🤝 Connect"}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

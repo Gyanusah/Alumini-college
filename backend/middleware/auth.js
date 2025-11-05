@@ -76,3 +76,18 @@ export const authorize = (...roles) => {
         next();
     };
 };
+
+// Check if user is verified (except admins)
+export const checkVerified = asyncHandler(async (req, res, next) => {
+    // Admins are always allowed
+    if (req.user.role === 'admin') {
+        return next();
+    }
+
+    // Check if user is verified
+    if (!req.user.isVerified) {
+        return next(new ErrorResponse('Your account is pending verification. Please wait for admin approval.', 403));
+    }
+
+    next();
+});

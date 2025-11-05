@@ -82,16 +82,18 @@ export const deleteJob = asyncHandler(async (req, res, next) => {
         return next(new ErrorResponse(`Job not found with id of ${req.params.id}`, 404));
     }
 
+    // Only the alumni who posted the job or admin can delete
     if (job.postedBy.toString() !== req.user.id && req.user.role !== 'admin') {
         return next(
-            new ErrorResponse(`User ${req.user.id} is not authorized to delete this job`, 401)
+            new ErrorResponse(`You are not authorized to delete this job. Only the job poster can delete it.`, 403)
         );
     }
 
-    await Job.findByIdAndRemove(req.params.id);
+    await Job.findByIdAndDelete(req.params.id);
 
     res.status(200).json({
         success: true,
+        message: 'Job deleted successfully',
         data: {},
     });
 });

@@ -10,6 +10,20 @@ import crypto from 'crypto';
 export const register = asyncHandler(async (req, res, next) => {
     const { name, email, password, role, branch, graduationYear } = req.body;
 
+    // Validate alumni graduation year
+    if (role === 'alumni') {
+        const currentYear = new Date().getFullYear();
+        
+        if (graduationYear >= currentYear) {
+            return next(
+                new ErrorResponse(
+                    `Cannot register as alumni with graduation year ${graduationYear}. Alumni must have graduated before ${currentYear}. Please register as a student instead.`,
+                    400
+                )
+            );
+        }
+    }
+
     const user = await User.create({
         name,
         email,

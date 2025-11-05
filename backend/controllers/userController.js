@@ -77,3 +77,100 @@ export const searchUsers = asyncHandler(async (req, res, next) => {
     });
 });
 
+// @desc    Verify user (Admin only)
+// @route   PUT /api/users/:id/verify
+// @access  Private/Admin
+export const verifyUser = asyncHandler(async (req, res, next) => {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+        return next(new ErrorResponse('User not found', 404));
+    }
+
+    // Check if user is alumni and validate graduation year
+    if (user.role === 'alumni') {
+        const currentYear = new Date().getFullYear();
+        
+        // Alumni must have graduated in a previous year
+        if (user.graduationYear >= currentYear) {
+            return next(
+                new ErrorResponse(
+                    `Cannot verify as alumni. Graduation year must be before ${currentYear}. Current students should have student role.`,
+                    400
+                )
+            );
+        }
+    }
+
+    // Verify the user
+    user.isVerified = true;
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: 'User verified successfully',
+        data: user
+    });
+});
+
+// @desc    Unverify user (Admin only)
+// @route   PUT /api/users/:id/unverify
+// @access  Private/Admin
+export const unverifyUser = asyncHandler(async (req, res, next) => {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+        return next(new ErrorResponse('User not found', 404));
+    }
+
+    user.isVerified = false;
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: 'User unverified successfully',
+        data: user
+    });
+});
+
+// @desc    Create new admin user (Admin only)
+// @route   POST /api/users/create-admin
+// @access  Private/Admin
+export const createAdminUser = asyncHandler(async (req, res, next) => {
+    const { name, email, password, branch, graduationYear } = req.body;
+
+    // Validate required fields
+    if (!name || !email || !password) {
+        return next(new ErrorResponse('Please provide name, email, and password', 400));
+    }
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+        return next(new ErrorResponse('User with this email already exists', 400));
+    }
+
+    // Create admin user
+    const adminUser = await User.create({
+        name,
+        email,
+        password,
+        role: 'admin',
+        branch: branch || 'Administration',
+        graduationYear: graduationYear || new Date().getFullYear(),
+        isVerified: true,
+        bio: 'Administrator'
+    });
+
+    res.status(201).json({
+        success: true,
+        message: 'Admin user created successfully',
+        data: {
+            _id: adminUser._id,
+            name: adminUser.name,
+            email: adminUser.email,
+            role: adminUser.role
+        }
+    });
+});
+

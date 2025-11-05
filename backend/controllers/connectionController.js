@@ -47,16 +47,22 @@ export const getPendingRequests = asyncHandler(async (req, res, next) => {
 // @route   POST /api/connections
 // @access  Private
 export const sendConnectionRequest = asyncHandler(async (req, res, next) => {
-    const { recipientId, message, isMentorshipRequest, mentorshipDetails } = req.body;
+    // Accept both 'recipient' and 'recipientId' for backwards compatibility
+    const { recipient, recipientId, message, isMentorshipRequest, mentorshipDetails } = req.body;
+    const targetRecipient = recipient || recipientId;
 
-    if (req.user.id === recipientId) {
+    if (!targetRecipient) {
+        return next(new ErrorResponse("Recipient is required", 400));
+    }
+
+    if (req.user.id === targetRecipient) {
         return next(new ErrorResponse("You cannot send a request to yourself", 400));
     }
 
     const existingConnection = await Connection.findOne({
         $or: [
-            { requester: req.user.id, recipient: recipientId },
-            { requester: recipientId, recipient: req.user.id }
+            { requester: req.user.id, recipient: targetRecipient },
+            { requester: targetRecipient, recipient: req.user.id }
         ]
     });
 
@@ -66,7 +72,7 @@ export const sendConnectionRequest = asyncHandler(async (req, res, next) => {
 
     const connection = await Connection.create({
         requester: req.user.id,
-        recipient: recipientId,
+        recipient: targetRecipient,
         message,
         mentorshipRequest: isMentorshipRequest,
         mentorshipDetails: isMentorshipRequest ? mentorshipDetails : undefined
@@ -148,7 +154,7 @@ export const deleteConnection = asyncHandler(async (req, res, next) => {
         return next(new ErrorResponse("You are not authorized to delete this connection", 401));
     }
 
-    await Connection.findByIdAndRemove(req.params.id);
+    await Connection.findByIdAndDelete(req.params.id);
 
     res.status(200).json({
         success: true,

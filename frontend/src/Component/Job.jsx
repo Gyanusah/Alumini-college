@@ -141,89 +141,156 @@ function Jobs() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-4xl font-bold mb-8">Job Opportunities</h1>
-
-      {/* Filters */}
-      <div className="bg-gray-400 rounded-lg shadow-md p-6 mb-8">
-        <h2 className="text-xl font-bold mb-4">Filter Jobs</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <select
-            name="jobType"
-            value={filters.jobType}
-            onChange={handleFilterChange}
-            className="input-field"
-          >
-            <option value="">All Job Types</option>
-            <option value="Full-time">Full-time</option>
-            <option value="Part-time">Part-time</option>
-            <option value="Internship">Internship</option>
-            <option value="Contract">Contract</option>
-          </select>
-          <input
-            type="text"
-            name="company"
-            placeholder="Filter by company"
-            value={filters.company}
-            onChange={handleFilterChange}
-            className="input-field"
-          />
-          <input
-            type="text"
-            name="location"
-            placeholder="Filter by location"
-            value={filters.location}
-            onChange={handleFilterChange}
-            className="input-field"
-          />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+            Job Opportunities
+          </h1>
+          <p className="text-gray-600">Find your dream job from our alumni network</p>
         </div>
-      </div>
 
-      <div className="grid grid-cols-1  lg:grid-cols-3 gap-8">
-        {/* Jobs List */}
-        <div className="lg:col-span-2">
-          {loading ? (
-            <div className="text-center py-12">
-              <p className="text-xl text-gray-600">Loading jobs...</p>
+        {/* Filters */}
+        <div className="bg-white rounded-2xl shadow-xl p-6 mb-8 border border-gray-100">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="text-2xl">🔍</span>
+            <h2 className="text-xl font-bold text-gray-800">Filter Jobs</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="relative">
+              <span className="absolute left-4 top-3 text-gray-400">💼</span>
+              <select
+                name="jobType"
+                value={filters.jobType}
+                onChange={handleFilterChange}
+                className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
+              >
+                <option value="">All Job Types</option>
+                <option value="Full-time">Full-time</option>
+                <option value="Part-time">Part-time</option>
+                <option value="Internship">Internship</option>
+                <option value="Contract">Contract</option>
+              </select>
             </div>
-          ) : jobs.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-xl text-gray-400">
-                No jobs found matching your filters
-              </p>
+            <div className="relative">
+              <span className="absolute left-4 top-3 text-gray-400">🏢</span>
+              <input
+                type="text"
+                name="company"
+                placeholder="Filter by company"
+                value={filters.company}
+                onChange={handleFilterChange}
+                className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+              />
             </div>
-          ) : (
-            <div className="space-y-4 bg-gray-200 p-3 rounded-2xl shadow-2xl ">
-              {jobs.map((job) => (
-                <div
-                  key={job._id}
-                  onClick={() => setSelectedJob(job)}
-                  className="card cursor-pointer hover:shadow-lg"
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <h3 className="text-xl font-bold">{job.title}</h3>
-                      <p className="text-gray-600">{job.company}</p>
+            <div className="relative">
+              <span className="absolute left-4 top-3 text-gray-400">📍</span>
+              <input
+                type="text"
+                name="location"
+                placeholder="Filter by location"
+                value={filters.location}
+                onChange={handleFilterChange}
+                className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Jobs List */}
+          <div className="lg:col-span-2">
+            {loading ? (
+              <div className="text-center py-20">
+                <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mb-4"></div>
+                <p className="text-xl text-gray-600 font-semibold">Loading jobs...</p>
+              </div>
+            ) : jobs.length === 0 ? (
+              <div className="text-center py-20 bg-white rounded-2xl shadow-lg">
+                <span className="text-6xl mb-4 block">💼</span>
+                <p className="text-2xl font-bold text-gray-800 mb-2">No Jobs Found</p>
+                <p className="text-gray-600">
+                  Try adjusting your filters to see more results
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {jobs.map((job) => (
+                  <div
+                    key={job._id}
+                    onClick={() => setSelectedJob(job)}
+                    className={`group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden ${
+                      selectedJob?._id === job._id
+                        ? 'ring-2 ring-blue-500 ring-offset-2'
+                        : 'hover:ring-2 hover:ring-blue-300 hover:ring-offset-2'
+                    }`}
+                  >
+                    {/* Card Header with Gradient */}
+                    <div className={`h-2 ${
+                      selectedJob?._id === job._id
+                        ? 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500'
+                        : 'bg-gradient-to-r from-blue-400 to-purple-400'
+                    }`}></div>
+                    
+                    <div className="p-6">
+                      {/* Title and Badge */}
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="flex-1 pr-4">
+                          <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                            {job.title}
+                          </h3>
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <span className="text-lg">🏢</span>
+                            <p className="font-semibold text-lg">{job.company}</p>
+                          </div>
+                        </div>
+                        <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-lg whitespace-nowrap">
+                          {job.jobType}
+                        </span>
+                      </div>
+
+                      {/* Location */}
+                      <div className="flex items-center gap-2 mb-4">
+                        <span className="text-blue-500 text-lg">📍</span>
+                        <p className="text-gray-700 font-medium">{job.location}</p>
+                      </div>
+
+                      {/* Description */}
+                      <p className="text-gray-600 leading-relaxed line-clamp-2 mb-4">
+                        {job.description}
+                      </p>
+
+                      {/* Footer with Posted By */}
+                      {job.postedBy && (
+                        <div className="mt-4 pt-4 border-t border-gray-200 flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold shadow-md">
+                              {job.postedBy.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-500 font-medium">Posted by</p>
+                              <p className="text-sm font-bold text-gray-800">{job.postedBy.name}</p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-xs text-gray-500">Click to view details</p>
+                            <p className="text-sm font-semibold text-blue-600">→</p>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded text-sm font-semibold">
-                      {job.jobType}
-                    </span>
                   </div>
-                  <p className="text-gray-600 mb-2">📍 {job.location}</p>
-                  <p className="text-gray-700 line-clamp-2">
-                    {job.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+                ))}
+              </div>
+            )}
+          </div>
 
-        {/* Job Details */}
-        <div className="lg:col-span-1 p-3 rounded-2xl shadow-2xl bg-gray-100">
-          {selectedJob ? (
-            <div className="card sticky top-4">
-              <h2 className="text-2xl font-bold mb-4">{selectedJob.title}</h2>
+          {/* Job Details */}
+          <div className="lg:col-span-1">
+            {selectedJob ? (
+              <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100 sticky top-4">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">{selectedJob.title}</h2>
               <div className="space-y-4">
                 <div>
                   <p className="font-semibold text-gray-600">Company</p>
@@ -264,7 +331,7 @@ function Jobs() {
                 )}
                 <div className="pt-4 border-t">
                   {appliedJobs.includes(selectedJob._id) ? (
-                    <button className="w-full bg-green-500 text-white py-2 rounded-lg font-semibold cursor-not-allowed">
+                    <button className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-xl font-semibold cursor-not-allowed shadow-lg">
                       ✓ Already Applied
                     </button>
                   ) : (
@@ -272,9 +339,9 @@ function Jobs() {
                       onClick={() =>
                         setShowApplicationForm(!showApplicationForm)
                       }
-                      className="w-full btn-primary py-2"
+                      className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                     >
-                      {showApplicationForm ? "Cancel" : "Apply Now"}
+                      {showApplicationForm ? "✕ Cancel" : "📝 Apply Now"}
                     </button>
                   )}
                 </div>
@@ -284,20 +351,23 @@ function Jobs() {
                   !appliedJobs.includes(selectedJob._id) && (
                     <form
                       onSubmit={handleApplyJob}
-                      className="mt-6 p-4 bg-gray-50 rounded-lg space-y-4 border-t pt-4"
+                      className="mt-6 p-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl border-2 border-blue-200 space-y-4"
                     >
-                      <h3 className="font-bold text-lg">
-                        Submit Your Application
-                      </h3>
+                      <div className="flex items-center gap-2 mb-4">
+                        <span className="text-2xl">📝</span>
+                        <h3 className="text-xl font-bold text-gray-800">
+                          Submit Your Application
+                        </h3>
+                      </div>
 
                       <div>
-                        <label className="block text-sm font-semibold mb-2">
-                          Resume URL *
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          📎 Resume URL *
                         </label>
                         <input
                           type="url"
                           placeholder="https://example.com/resume.pdf"
-                          className="input-field"
+                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                           value={applicationData.resume}
                           onChange={(e) =>
                             setApplicationData({
@@ -307,20 +377,19 @@ function Jobs() {
                           }
                           required
                         />
-                        <p className="text-xs text-gray-500 mt-1">
-                          Provide a link to your resume (PDF, Google Drive,
-                          etc.)
+                        <p className="text-xs text-gray-600 mt-2 italic">
+                          💡 Provide a link to your resume (PDF, Google Drive, LinkedIn, etc.)
                         </p>
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold mb-2">
-                          Cover Letter
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          ✍️ Cover Letter
                         </label>
                         <textarea
-                          placeholder="Tell us why you're interested in this position..."
-                          className="input-field"
-                          rows="4"
+                          placeholder="Tell us why you're interested in this position and what makes you a great fit..."
+                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                          rows="5"
                           value={applicationData.coverLetter}
                           onChange={(e) =>
                             setApplicationData({
@@ -331,31 +400,33 @@ function Jobs() {
                         ></textarea>
                       </div>
 
-                      <div className="flex gap-2 pt-2">
+                      <div className="flex gap-3 pt-4">
                         <button
                           type="submit"
-                          className="flex-1 btn-primary py-2 font-semibold"
+                          className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50"
                           disabled={submitting}
                         >
-                          {submitting ? "Submitting..." : "Submit Application"}
+                          {submitting ? "⏳ Submitting..." : "✓ Submit Application"}
                         </button>
                         <button
                           type="button"
                           onClick={() => setShowApplicationForm(false)}
-                          className="flex-1 btn-secondary py-2 font-semibold"
+                          className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 rounded-xl transition-all duration-300"
                         >
-                          Cancel
+                          ✕ Cancel
                         </button>
                       </div>
                     </form>
                   )}
               </div>
-            </div>
-          ) : (
-            <div className="card text-center">
-              <p className="text-gray-600">Select a job to view details</p>
-            </div>
-          )}
+              </div>
+            ) : (
+              <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 text-center">
+                <span className="text-6xl mb-4 block">👈</span>
+                <p className="text-gray-600 font-semibold">Select a job to view details</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

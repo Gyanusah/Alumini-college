@@ -17,7 +17,9 @@ import jobRoutes from './routes/jobs.js';
 import eventRoutes from './routes/events.js';
 import connectionRoutes from './routes/connections.js';
 import alumniRoutes from './routes/alumni.js';
+import statsRoutes from './routes/stats.js';
 import connectDB from './config/db.js';
+import { scheduleJobCleanup } from './utils/jobCleanup.js';
 
 // ============================
 // 🚀 Initialize App
@@ -36,6 +38,11 @@ connectDB();
 console.log('Mongo URI:', process.env.MONGO_URI);
 
 // ============================
+// 🧹 Start Job Cleanup Scheduler
+// ============================
+scheduleJobCleanup();
+
+// ============================
 // 🌐 API Routes
 // ============================
 app.use('/api/auth', authRoutes);
@@ -44,6 +51,7 @@ app.use('/api/jobs', jobRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/connections', connectionRoutes);
 app.use('/api/alumni', alumniRoutes);
+app.use('/api/stats', statsRoutes);
 
 
 

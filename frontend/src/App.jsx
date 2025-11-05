@@ -8,6 +8,7 @@ import Register from "./Component/Register";
 import StudentDashboard from "./Screen/Dashboard/StudentDashboard";
 import AlumniDashboard from "./Screen/Dashboard/AlumniDashboard";
 import AdminDashboard from "./Screen/Dashboard/AdminDashboard";
+import CreateAdmin from "./Screen/Dashboard/CreateAdmin";
 import Alumni from "./Screen/Alumni";
 import Jobs from "./Component/Job";
 import Events from "./Component/Event/Event";
@@ -108,6 +109,14 @@ function App() {
               element={
                 <ProtectedRoute user={user} requiredRole="admin">
                   <AdminDashboard user={user} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/create-admin"
+              element={
+                <ProtectedRoute user={user} requiredRole="admin">
+                  <CreateAdmin />
                 </ProtectedRoute>
               }
             />
