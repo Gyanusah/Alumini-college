@@ -18,7 +18,7 @@ const createAdmin = async () => {
 
         // Check if admin already exists
         const existingAdmin = await User.findOne({ email: adminEmail });
-        
+
         if (existingAdmin) {
             console.log('❌ Admin user already exists');
             console.log('ℹ️  Use the existing admin credentials to login');
@@ -46,7 +46,7 @@ const createAdmin = async () => {
         console.log('');
         console.log('⚠️  IMPORTANT: Change the default password after first login!');
         console.log('💡 TIP: Set ADMIN_EMAIL and ADMIN_PASSWORD in .env for custom credentials');
-        
+
         process.exit(0);
     } catch (error) {
         console.error('❌ Error creating admin:', error);
